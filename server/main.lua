@@ -56,16 +56,16 @@ AddEventHandler('esx_society:withdrawMoney', function(societyName, amount)
 		print(('[^3WARNING^7] Player ^5%s^7 attempted to withdraw from non-existing society - ^5%s^7!'):format(source, societyName))
 		return
 	end
-	local xPlayer = ESX.GetPlayerFromId(source)
+	local xPlayer = ESX.Player(source)
 	amount = ESX.Math.Round(tonumber(amount))
-	if xPlayer.job.name ~= society.name then
+	if xPlayer.getJob().name ~= society.name then
 		return print(('[^3WARNING^7] Player ^5%s^7 attempted to withdraw from society - ^5%s^7!'):format(source, society.name))
 	end
 	TriggerEvent('esx_addonaccount:getSharedAccount', society.account, function(account)
 		if amount > 0 and account.money >= amount then
 			account.removeMoney(amount)
 			xPlayer.addMoney(amount, TranslateCap('money_add_reason'))
-			Config.Notify('have_withdrawn', xPlayer.source, ESX.Math.GroupDigits(amount))
+			Config.Notify('have_withdrawn', source, ESX.Math.GroupDigits(amount))
 		end
 	end)
 end)
@@ -73,20 +73,20 @@ end)
 RegisterServerEvent('esx_society:depositMoney')
 AddEventHandler('esx_society:depositMoney', function(societyName, amount)
 	local source = source
-	local xPlayer = ESX.GetPlayerFromId(source)
+	local xPlayer = ESX.Player(source)
 	local society = GetSociety(societyName)
 	if not society then
 		print(('[^3WARNING^7] Player ^5%s^7 attempted to deposit to non-existing society - ^5%s^7!'):format(source, societyName))
 		return
 	end
 	amount = ESX.Math.Round(tonumber(amount))
-	if xPlayer.job.name ~= society.name then
+	if xPlayer.getJob().name ~= society.name then
 		return print(('[^3WARNING^7] Player ^5%s^7 attempted to deposit to society - ^5%s^7!'):format(source, society.name))
 	end
 	if amount > 0 and xPlayer.getMoney() >= amount then
 		TriggerEvent('esx_addonaccount:getSharedAccount', society.account, function(account)
 			xPlayer.removeMoney(amount, TranslateCap('money_remove_reason'))
-			Config.Notify('have_deposited', xPlayer.source, ESX.Math.GroupDigits(amount))
+			Config.Notify('have_deposited', source, ESX.Math.GroupDigits(amount))
 			account.addMoney(amount)
 		end)
 	end
@@ -161,11 +161,11 @@ lib.callback.register('esx_society:getJob', function(source, society)
 end)
 
 lib.callback.register('esx_society:setJob', function(source, identifier, job, grade, actionType)
-	local xPlayer = ESX.GetPlayerFromId(source)
+	local xPlayer = ESX.Player(source)
 	local isBoss = Config.BossGrades[xPlayer.job.grade_name]
-	local xTarget = ESX.GetPlayerFromIdentifier(identifier)
+	local xTarget = ESX.Player(identifier)
 	if not isBoss then
-		print(('[^3WARNING^7] Player ^5%s^7 attempted to setJob for Player ^5%s^7!'):format(source, xTarget.source))
+		print(('[^3WARNING^7] Player ^5%s^7 attempted to setJob for Player ^5%s^7!'):format(source, xTarget.src))
 		return false
 	end
 	if not xTarget then
@@ -177,24 +177,25 @@ lib.callback.register('esx_society:setJob', function(source, identifier, job, gr
 	end
 	xTarget.setJob(job, grade)
 	if actionType == 'hire' then
-		Config.Notify('you_have_been_hired', xTarget.source, job)
-		Config.Notify('you_have_hired', xPlayer.source, xTarget.getName())
+		Config.Notify('you_have_been_hired', xTarget.src, job)
+		Config.Notify('you_have_hired', source, xTarget.getName())
 	elseif actionType == 'promote' then
-		Config.Notify('you_have_been_promoted', xTarget.source)
-		Config.Notify('you_have_promoted', xPlayer.source, xTarget.getName(), xTarget.getJob().grade_label)
+		Config.Notify('you_have_been_promoted', xTarget.src)
+		Config.Notify('you_have_promoted', source, xTarget.getName(), xTarget.getJob().grade_label)
 	elseif actionType == 'demote' then
-		Config.Notify('you_have_been_demoted', xTarget.source)
-		Config.Notify('you_have_demoted', xPlayer.source, xTarget.getName(), xTarget.getJob().grade_label)
+		Config.Notify('you_have_been_demoted', xTarget.src)
+		Config.Notify('you_have_demoted', source, xTarget.getName(), xTarget.getJob().grade_label)
 	elseif actionType == 'fire' then
-		Config.Notify('you_have_been_fired', xTarget.source, xPlayer.getJob().label)
-		Config.Notify('you_have_fired', xPlayer.source, xTarget.getName())
+		Config.Notify('you_have_been_fired', xTarget.src, xPlayer.getJob().label)
+		Config.Notify('you_have_fired', source, xTarget.getName())
 	end
 	return true
 end)
 
 lib.callback.register('esx_society:setJobSalary', function(source, job, grade, salary, gradeLabel)
-	local xPlayer = ESX.GetPlayerFromId(source)
-	if xPlayer.job.name == job and Config.BossGrades[xPlayer.job.grade_name] then
+	local source = source
+	local xPlayer = ESX.Player(source)
+	if xPlayer.getJob().name == job and Config.BossGrades[xPlayer.getJob().grade_name] then
 		if salary <= Config.MaxSalary then
 			MySQL.update('UPDATE job_grades SET salary = ? WHERE job_name = ? AND grade = ?', {salary, job, grade},
 			function(rowsChanged)
@@ -207,7 +208,7 @@ lib.callback.register('esx_society:setJobSalary', function(source, job, grade, s
 						xTarget.setJob(job, grade)
 					end
 				end
-				Config.Notify('salary_change', xPlayer.source, salary, gradeLabel)
+				Config.Notify('salary_change', source, salary, gradeLabel)
 				return true
 			end)
 		else
@@ -221,8 +222,9 @@ lib.callback.register('esx_society:setJobSalary', function(source, job, grade, s
 end)
 
 lib.callback.register('esx_society:setJobLabel', function(source, job, grade, label)
-    local xPlayer = ESX.GetPlayerFromId(source)
-    if xPlayer.job.name == job and Config.BossGrades[xPlayer.job.grade_name] then
+	local source = source
+    local xPlayer = ESX.Player(source)
+    if xPlayer.getJob().name == job and Config.BossGrades[xPlayer.getJob().grade_name] then
         MySQL.update('UPDATE job_grades SET label = ? WHERE job_name = ? AND grade = ?', {label, job, grade},
         function(rowsChanged)
             Jobs[job].grades[tostring(grade)].label = label
@@ -234,7 +236,7 @@ lib.callback.register('esx_society:setJobLabel', function(source, job, grade, la
                     xTarget.setJob(job, grade)
                 end
             end
-			Config.Notify('grade_change', xPlayer.source, label)
+			Config.Notify('grade_change', source, label)
 			return true
         end)
     else
@@ -250,9 +252,9 @@ lib.callback.register('esx_society:getOnlinePlayers', function(source)
 			local xPlayer = xPlayers[i]
 			table.insert(onlinePlayers, {
 				source = xPlayer.source,
-				identifier = xPlayer.identifier,
-				name = xPlayer.name,
-				job = xPlayer.job
+				identifier = xPlayer.getIdentifier(),
+				name = xPlayer.getName(),
+				job = xPlayer.getJob().name
 			})
 		end
 	return onlinePlayers
@@ -275,8 +277,8 @@ lib.callback.register('esx_society:isBoss', function(source, job)
 end)
 
 function isPlayerBoss(playerId, job)
-	local xPlayer = ESX.GetPlayerFromId(playerId)
-	if xPlayer.job.name == job and Config.BossGrades[xPlayer.job.grade_name] then
+	local xPlayer = ESX.Player(playerId)
+	if xPlayer.getJob().name == job and Config.BossGrades[xPlayer.getJob().grade_name] then
 		return true
 	end
 end
