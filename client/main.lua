@@ -123,9 +123,8 @@ function OpenEmployeeList(society, options)
 	local elements = {}
 	local employees = lib.callback.await('esx_society:getEmployees', false, society)
 	for i=1, #employees, 1 do
-		local gradeLabel = (employees[i].grade_label == '' and employees[i].label or employees[i].grade_label)
 		elements[#elements+1] = {
-			title = employees[i].name .. " | " ..gradeLabel, gradeLabel = gradeLabel,
+			title = employees[i].name .. " | " ..employees[i].grade_label,
 			icon = "fas fa-user",
 			onSelect = function()
 				OpenSelectedEmploye(society, options, employees[i])

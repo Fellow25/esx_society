@@ -128,21 +128,45 @@ AddEventHandler('esx_society:removeVehicleFromGarage', function(societyName, veh
 end)
 
 lib.callback.register('esx_society:getEmployees', function(source, society)
-	local employees = {}
-	local response = MySQL.query.await('SELECT * FROM `users` WHERE `job` = ?', {society})
-	for i = 1, #response do
-		local row = response[i]
-		employees[#employees+1] = {				
-			identifier = row.identifier,
-			name = row.firstname..' '..row.lastname,
-			label = Jobs[society].label,
-			grade = row.job_grade,
-			grade_name = Jobs[society].grades[tostring(row.job_grade)].name,
-			grade_label = Jobs[society].grades[tostring(row.job_grade)].label
-		}
-	end
-	return employees
+    local employees = {}
+    local onlinePlayers = ESX.GetExtendedPlayers('job', society)
+    for _, xPlayer in pairs(onlinePlayers) do
+		print(json.encode(xPlayer.getJob()))
+        employees[#employees+1] = {
+            identifier = xPlayer.identifier,
+            name = ("%s %s"):format(xPlayer.get('firstName'), xPlayer.get('lastName')),
+            label = Jobs[society].label,
+            grade = xPlayer.getJob().grade,
+            grade_name = xPlayer.getJob().name,
+            grade_label = xPlayer.getJob().grade_label,
+            online = true
+        }
+    end
+    local response = MySQL.query.await('SELECT * FROM `users` WHERE `job` = ?', {society})
+    for i = 1, #response do
+        local row = response[i]
+        local alreadyAdded = false
+        for _, emp in ipairs(employees) do
+            if emp.identifier == row.identifier then
+                alreadyAdded = true
+                break
+            end
+        end
+        if not alreadyAdded then
+            employees[#employees+1] = {
+                identifier = row.identifier,
+                name = row.firstname .. ' ' .. row.lastname,
+                label = Jobs[society].label,
+                grade = row.job_grade,
+                grade_name = Jobs[society].grades[tostring(row.job_grade)].name,
+                grade_label = Jobs[society].grades[tostring(row.job_grade)].label,
+                online = false
+            }
+        end
+    end
+    return employees
 end)
+
 
 lib.callback.register('esx_society:getJob', function(source, society)
 	if not Jobs[society] then
@@ -178,20 +202,22 @@ lib.callback.register('esx_society:setJob', function(source, identifier, job, gr
 		end)
 		return
 	end
-	xTarget.setJob(job, grade)
 	if actionType == 'hire' then
 		Config.Notify('you_have_been_hired', xTarget.src, job)
 		Config.Notify('you_have_hired', source, namexTarget)
 	elseif actionType == 'promote' then
 		Config.Notify('you_have_been_promoted', xTarget.src)
 		Config.Notify('you_have_promoted', source, namexTarget, jobxTarget.grade_label)
+		if grade >= playerJob.grade then return end
 	elseif actionType == 'demote' then
 		Config.Notify('you_have_been_demoted', xTarget.src)
 		Config.Notify('you_have_demoted', source, namexTarget, jobxTarget.grade_label)
+		if grade < 0 then return end
 	elseif actionType == 'fire' then
 		Config.Notify('you_have_been_fired', xTarget.src, playerJob.label)
 		Config.Notify('you_have_fired', source, namexTarget)
 	end
+	xTarget.setJob(job, grade)
 	return true
 end)
 
