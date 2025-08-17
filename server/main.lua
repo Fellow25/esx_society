@@ -162,8 +162,11 @@ end)
 
 lib.callback.register('esx_society:setJob', function(source, identifier, job, grade, actionType)
 	local xPlayer = ESX.Player(source)
-	local isBoss = Config.BossGrades[xPlayer.job.grade_name]
+	local playerJob = xPlayer.getJob()
+	local isBoss = Config.BossGrades[playerJob.grade_name]
 	local xTarget = ESX.Player(identifier)
+	local namexTarget = xTarget.getName()
+	local jobxTarget = xTarget.getJob()
 	if not isBoss then
 		print(('[^3WARNING^7] Player ^5%s^7 attempted to setJob for Player ^5%s^7!'):format(source, xTarget.src))
 		return false
@@ -178,16 +181,16 @@ lib.callback.register('esx_society:setJob', function(source, identifier, job, gr
 	xTarget.setJob(job, grade)
 	if actionType == 'hire' then
 		Config.Notify('you_have_been_hired', xTarget.src, job)
-		Config.Notify('you_have_hired', source, xTarget.getName())
+		Config.Notify('you_have_hired', source, namexTarget)
 	elseif actionType == 'promote' then
 		Config.Notify('you_have_been_promoted', xTarget.src)
-		Config.Notify('you_have_promoted', source, xTarget.getName(), xTarget.getJob().grade_label)
+		Config.Notify('you_have_promoted', source, namexTarget, jobxTarget.grade_label)
 	elseif actionType == 'demote' then
 		Config.Notify('you_have_been_demoted', xTarget.src)
-		Config.Notify('you_have_demoted', source, xTarget.getName(), xTarget.getJob().grade_label)
+		Config.Notify('you_have_demoted', source, namexTarget, jobxTarget.grade_label)
 	elseif actionType == 'fire' then
-		Config.Notify('you_have_been_fired', xTarget.src, xPlayer.getJob().label)
-		Config.Notify('you_have_fired', source, xTarget.getName())
+		Config.Notify('you_have_been_fired', xTarget.src, playerJob.label)
+		Config.Notify('you_have_fired', source, namexTarget)
 	end
 	return true
 end)
@@ -224,7 +227,8 @@ end)
 lib.callback.register('esx_society:setJobLabel', function(source, job, grade, label)
 	local source = source
     local xPlayer = ESX.Player(source)
-    if xPlayer.getJob().name == job and Config.BossGrades[xPlayer.getJob().grade_name] then
+	local playerJob = xPlayer.getJob()
+    if playerJob.name == job and Config.BossGrades[playerJob.grade_name] then
         MySQL.update('UPDATE job_grades SET label = ? WHERE job_name = ? AND grade = ?', {label, job, grade},
         function(rowsChanged)
             Jobs[job].grades[tostring(grade)].label = label
@@ -278,7 +282,8 @@ end)
 
 function isPlayerBoss(playerId, job)
 	local xPlayer = ESX.Player(playerId)
-	if xPlayer.getJob().name == job and Config.BossGrades[xPlayer.getJob().grade_name] then
+	local playerJob = xPlayer.getJob()
+	if playerJob.name == job and Config.BossGrades[playerJob.grade_name] then
 		return true
 	end
 end
