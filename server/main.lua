@@ -131,7 +131,6 @@ lib.callback.register('esx_society:getEmployees', function(source, society)
     local employees = {}
     local onlinePlayers = ESX.GetExtendedPlayers('job', society)
     for _, xPlayer in pairs(onlinePlayers) do
-		print(json.encode(xPlayer.getJob()))
         employees[#employees+1] = {
             identifier = xPlayer.identifier,
             name = ("%s %s"):format(xPlayer.get('firstName'), xPlayer.get('lastName')),
@@ -185,40 +184,40 @@ lib.callback.register('esx_society:getJob', function(source, society)
 end)
 
 lib.callback.register('esx_society:setJob', function(source, identifier, job, grade, actionType)
-	local xPlayer = ESX.Player(source)
-	local playerJob = xPlayer.getJob()
-	local isBoss = Config.BossGrades[playerJob.grade_name]
-	local xTarget = ESX.Player(identifier)
-	local namexTarget = xTarget.getName()
+    local xPlayer = ESX.Player(source)
+    local playerJob = xPlayer.getJob()
+    local isBoss = Config.BossGrades[playerJob.grade_name]
+    if not isBoss then
+        print(('[^3WARNING^7] Player ^5%s^7 attempted to setJob for identifier ^5%s^7!'):format(source, identifier))
+        return false
+    end
+    local xTarget = ESX.Player(identifier)
+    if not xTarget then
+        MySQL.update('UPDATE users SET job = ?, job_grade = ? WHERE identifier = ?', {job, grade, identifier})
+        return true
+    end
+    local namexTarget = xTarget.getName()
+    if actionType == 'promote' and grade >= playerJob.grade then
+        return false
+    elseif actionType == 'demote' and grade < 0 then
+        return false
+    end
+    xTarget.setJob(job, grade)
 	local jobxTarget = xTarget.getJob()
-	if not isBoss then
-		print(('[^3WARNING^7] Player ^5%s^7 attempted to setJob for Player ^5%s^7!'):format(source, xTarget.src))
-		return false
-	end
-	if not xTarget then
-		MySQL.update('UPDATE users SET job = ?, job_grade = ? WHERE identifier = ?', {job, grade, identifier},
-		function()
-			return false
-		end)
-		return
-	end
-	if actionType == 'hire' then
-		Config.Notify('you_have_been_hired', xTarget.src, job)
-		Config.Notify('you_have_hired', source, namexTarget)
-	elseif actionType == 'promote' then
-		Config.Notify('you_have_been_promoted', xTarget.src)
-		Config.Notify('you_have_promoted', source, namexTarget, jobxTarget.grade_label)
-		if grade >= playerJob.grade then return end
-	elseif actionType == 'demote' then
-		Config.Notify('you_have_been_demoted', xTarget.src)
-		Config.Notify('you_have_demoted', source, namexTarget, jobxTarget.grade_label)
-		if grade < 0 then return end
-	elseif actionType == 'fire' then
-		Config.Notify('you_have_been_fired', xTarget.src, playerJob.label)
-		Config.Notify('you_have_fired', source, namexTarget)
-	end
-	xTarget.setJob(job, grade)
-	return true
+    if actionType == 'hire' then
+        Config.Notify('you_have_been_hired', xTarget.src, job)
+        Config.Notify('you_have_hired', source, namexTarget)
+    elseif actionType == 'promote' then
+        Config.Notify('you_have_been_promoted', xTarget.src)
+        Config.Notify('you_have_promoted', source, namexTarget, jobxTarget.grade_label)
+    elseif actionType == 'demote' then
+        Config.Notify('you_have_been_demoted', xTarget.src)
+        Config.Notify('you_have_demoted', source, namexTarget, jobxTarget.grade_label)
+    elseif actionType == 'fire' then
+        Config.Notify('you_have_been_fired', xTarget.src, playerJob.label)
+        Config.Notify('you_have_fired', source, namexTarget)
+    end
+    return true
 end)
 
 lib.callback.register('esx_society:setJobSalary', function(source, job, grade, salary, gradeLabel)
