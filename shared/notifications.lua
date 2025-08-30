@@ -5,8 +5,17 @@ Config.Notifications = {
         description                     = 'Vous avez retiré %s$',
         position                        = 'top',
         style = {
-            backgroundColor             = '#000000',
-            color                       = '#ffffff'
+            backgroundColor = 'rgba(15, 30, 51, 0.8)',
+            color = '#C1C2C5',
+            borderRadius = '20px',
+            boxShadow = '0 4px 6px rgba(0, 0, 0, 0.8)',
+            padding = '16px',
+            fontSize = '14px',
+            opacity = 0.8,
+            transition = 'opacity 0.3s ease-in-out',
+            ['.description'] = {
+                color = '#909296'
+            }
         },
         icon                            = 'check',
         type                            = 'sucess',
@@ -18,8 +27,17 @@ Config.Notifications = {
         description                     = 'Vous avez déposé %s$',
         position                        = 'top',
         style = {
-            backgroundColor             = '#000000',
-            color                       = '#ffffff'
+            backgroundColor = 'rgba(15, 30, 51, 0.8)',
+            color = '#C1C2C5',
+            borderRadius = '20px',
+            boxShadow = '0 4px 6px rgba(0, 0, 0, 0.8)',
+            padding = '16px',
+            fontSize = '14px',
+            opacity = 0.8,
+            transition = 'opacity 0.3s ease-in-out',
+            ['.description'] = {
+                color = '#909296'
+            }
         },
         icon                            = 'check',
         type                            = 'sucess',
@@ -31,8 +49,17 @@ Config.Notifications = {
         description                     = 'Vous avez été recruté dans la société %s',
         position                        = 'top',
         style = {
-            backgroundColor             = '#000000',
-            color                       = '#ffffff'
+            backgroundColor = 'rgba(15, 30, 51, 0.8)',
+            color = '#C1C2C5',
+            borderRadius = '20px',
+            boxShadow = '0 4px 6px rgba(0, 0, 0, 0.8)',
+            padding = '16px',
+            fontSize = '14px',
+            opacity = 0.8,
+            transition = 'opacity 0.3s ease-in-out',
+            ['.description'] = {
+                color = '#909296'
+            }
         },
         icon                            = 'check',
         type                            = 'sucess',
@@ -44,8 +71,17 @@ Config.Notifications = {
         description                     = 'Vous avez recruté %s',
         position                        = 'top',
         style = {
-            backgroundColor             = '#000000',
-            color                       = '#ffffff'
+            backgroundColor = 'rgba(15, 30, 51, 0.8)',
+            color = '#C1C2C5',
+            borderRadius = '20px',
+            boxShadow = '0 4px 6px rgba(0, 0, 0, 0.8)',
+            padding = '16px',
+            fontSize = '14px',
+            opacity = 0.8,
+            transition = 'opacity 0.3s ease-in-out',
+            ['.description'] = {
+                color = '#909296'
+            }
         },
         icon                            = 'check',
         type                            = 'sucess',
@@ -57,8 +93,17 @@ Config.Notifications = {
         description                     = 'Vous avez été promu',
         position                        = 'top',
         style = {
-            backgroundColor             = '#000000',
-            color                       = '#ffffff'
+            backgroundColor = 'rgba(15, 30, 51, 0.8)',
+            color = '#C1C2C5',
+            borderRadius = '20px',
+            boxShadow = '0 4px 6px rgba(0, 0, 0, 0.8)',
+            padding = '16px',
+            fontSize = '14px',
+            opacity = 0.8,
+            transition = 'opacity 0.3s ease-in-out',
+            ['.description'] = {
+                color = '#909296'
+            }
         },
         icon                            = 'check',
         type                            = 'sucess',
@@ -70,8 +115,17 @@ Config.Notifications = {
         description                     = 'Vous avez promu %s en tant que %s',
         position                        = 'top',
         style = {
-            backgroundColor             = '#000000',
-            color                       = '#ffffff'
+            backgroundColor = 'rgba(15, 30, 51, 0.8)',
+            color = '#C1C2C5',
+            borderRadius = '20px',
+            boxShadow = '0 4px 6px rgba(0, 0, 0, 0.8)',
+            padding = '16px',
+            fontSize = '14px',
+            opacity = 0.8,
+            transition = 'opacity 0.3s ease-in-out',
+            ['.description'] = {
+                color = '#909296'
+            }
         },
         icon                            = 'check',
         type                            = 'sucess',
@@ -83,8 +137,17 @@ Config.Notifications = {
         description                     = 'Vous avez été rétrograder',
         position                        = 'top',
         style = {
-            backgroundColor             = '#000000',
-            color                       = '#ffffff'
+            backgroundColor = 'rgba(15, 30, 51, 0.8)',
+            color = '#C1C2C5',
+            borderRadius = '20px',
+            boxShadow = '0 4px 6px rgba(0, 0, 0, 0.8)',
+            padding = '16px',
+            fontSize = '14px',
+            opacity = 0.8,
+            transition = 'opacity 0.3s ease-in-out',
+            ['.description'] = {
+                color = '#909296'
+            }
         },
         icon                            = 'check',
         type                            = 'sucess',
@@ -96,8 +159,17 @@ Config.Notifications = {
         description                     = 'Vous avez rétrograder %s en tant que %s',
         position                        = 'top',
         style = {
-            backgroundColor             = '#000000',
-            color                       = '#ffffff'
+            backgroundColor = 'rgba(15, 30, 51, 0.8)',
+            color = '#C1C2C5',
+            borderRadius = '20px',
+            boxShadow = '0 4px 6px rgba(0, 0, 0, 0.8)',
+            padding = '16px',
+            fontSize = '14px',
+            opacity = 0.8,
+            transition = 'opacity 0.3s ease-in-out',
+            ['.description'] = {
+                color = '#909296'
+            }
         },
         icon                            = 'check',
         type                            = 'sucess',
@@ -109,8 +181,17 @@ Config.Notifications = {
         description                     = 'Vous avez été viré de la société %s',
         position                        = 'top',
         style = {
-            backgroundColor             = '#000000',
-            color                       = '#ffffff'
+            backgroundColor = 'rgba(15, 30, 51, 0.8)',
+            color = '#C1C2C5',
+            borderRadius = '20px',
+            boxShadow = '0 4px 6px rgba(0, 0, 0, 0.8)',
+            padding = '16px',
+            fontSize = '14px',
+            opacity = 0.8,
+            transition = 'opacity 0.3s ease-in-out',
+            ['.description'] = {
+                color = '#909296'
+            }
         },
         icon                            = 'check',
         type                            = 'sucess',
@@ -122,8 +203,17 @@ Config.Notifications = {
         description                     = 'Vous avez viré %s',
         position                        = 'top',
         style = {
-            backgroundColor             = '#000000',
-            color                       = '#ffffff'
+            backgroundColor = 'rgba(15, 30, 51, 0.8)',
+            color = '#C1C2C5',
+            borderRadius = '20px',
+            boxShadow = '0 4px 6px rgba(0, 0, 0, 0.8)',
+            padding = '16px',
+            fontSize = '14px',
+            opacity = 0.8,
+            transition = 'opacity 0.3s ease-in-out',
+            ['.description'] = {
+                color = '#909296'
+            }
         },
         icon                            = 'check',
         type                            = 'sucess',
@@ -135,8 +225,17 @@ Config.Notifications = {
         description                     = 'Salaire de %s$ pour le grade %s',
         position                        = 'top',
         style = {
-            backgroundColor             = '#000000',
-            color                       = '#ffffff'
+            backgroundColor = 'rgba(15, 30, 51, 0.8)',
+            color = '#C1C2C5',
+            borderRadius = '20px',
+            boxShadow = '0 4px 6px rgba(0, 0, 0, 0.8)',
+            padding = '16px',
+            fontSize = '14px',
+            opacity = 0.8,
+            transition = 'opacity 0.3s ease-in-out',
+            ['.description'] = {
+                color = '#909296'
+            }
         },
         icon                            = 'check',
         type                            = 'sucess',
@@ -148,8 +247,17 @@ Config.Notifications = {
         description                     = 'Le grade se nomme maitenant %s',
         position                        = 'top',
         style = {
-            backgroundColor             = '#000000',
-            color                       = '#ffffff'
+            backgroundColor = 'rgba(15, 30, 51, 0.8)',
+            color = '#C1C2C5',
+            borderRadius = '20px',
+            boxShadow = '0 4px 6px rgba(0, 0, 0, 0.8)',
+            padding = '16px',
+            fontSize = '14px',
+            opacity = 0.8,
+            transition = 'opacity 0.3s ease-in-out',
+            ['.description'] = {
+                color = '#909296'
+            }
         },
         icon                            = 'check',
         type                            = 'sucess',

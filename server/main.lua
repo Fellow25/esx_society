@@ -276,11 +276,11 @@ end)
 
 lib.callback.register('esx_society:getOnlinePlayers', function(source)
 		local onlinePlayers = {}
-		local xPlayers = ESX.GetExtendedPlayers()
+		local xPlayers = ESX.ExtendedPlayers()
 		for i=1, #(xPlayers) do 
 			local xPlayer = xPlayers[i]
 			table.insert(onlinePlayers, {
-				source = xPlayer.source,
+				source = xPlayer.src,
 				identifier = xPlayer.getIdentifier(),
 				name = xPlayer.getName(),
 				job = xPlayer.getJob().name
