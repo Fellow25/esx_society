@@ -132,7 +132,7 @@ lib.callback.register('esx_society:getEmployees', function(source, society)
     local onlinePlayers = ESX.GetExtendedPlayers('job', society)
     for _, xPlayer in pairs(onlinePlayers) do
         employees[#employees+1] = {
-            identifier = xPlayer.identifier,
+            identifier = xPlayer.getIdentifier(),
             name = ("%s %s"):format(xPlayer.get('firstName'), xPlayer.get('lastName')),
             label = Jobs[society].label,
             grade = xPlayer.getJob().grade,
